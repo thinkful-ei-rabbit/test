@@ -4,7 +4,8 @@ import './App.css';
 import {LocalStorage} from './store';
 
 class Storage {
-  @LocalStorage()
+  // tried checking how the 'key' effects stuff
+  @LocalStorage(true, 'test')
   name!: string;
 }
 

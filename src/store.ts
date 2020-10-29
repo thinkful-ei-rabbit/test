@@ -10,7 +10,7 @@ export class LStorageService {
 
     public getStorageValue(storageKey : string) : any {
         return this._storage[storageKey];
-    } 
+    }
     public setStorageValue(storageKey : string, value : any) : any {
         this._storage[storageKey] = value;
     }
@@ -64,10 +64,22 @@ export function LocalStorage(autoSave : boolean, key ?: string) {
         }
 
         Object.defineProperty(target, propName, {
-            configurable : true,
-            enumerable   : true,
-            get          : getValue,
-            set          : (autoSave)? setValueAuto : setValue
-        });
+          configurable: true,
+          enumerable: true,
+          get() {
+              return storageService.getStorageValue(propNameId);
+          },
+          set: autoSave
+              // 'val' is inferred as the get() method's return value
+              ? function (val) {
+                  storageService.setStorageValue(propNameId, val);
+                  storageService.saveStorageByKey(propNameId);
+              }
+              : function (val) {
+                  storageService.setStorageValue(propNameId, val)
+              }
+      });
+      // trying to fish for any data to debug
+      console.log('checker', target, propName);
     }
 }
